@@ -1,24 +1,27 @@
-# Python Task Manager
+# Python Task Manager (CLI)
 
-A terminal-based task manager built with Python.
+A simple but structured command-line task manager built in Python.  
+This project was developed step-by-step to practice software engineering fundamentals, clean architecture, and Git workflow discipline.
 
-## Current Features
-- Interactive menu system
-- Input validation
-- Application loop
-- Modular function structure
+---
 
-## Technologies
-- Python
-- Git
-- GitHub
+## 🚀 Features
 
-## Current Development Stage
-Stage 1 — Menu System Foundation
+- Add new tasks with validation
+- View all tasks in a formatted list
+- Remove tasks by selection
+- Mark tasks as complete/incomplete
+- Clean interactive menu system
+- Input validation and error handling
 
-## Learning Goals
-This project is being built step-by-step to practice:
-- Python fundamentals
-- Software structure
-- Git and GitHub workflow
-- Clean coding practices
+---
+
+## 🧠 Task Data Model
+
+Each task is stored as a Python dictionary:
+
+```python
+{
+    "title": str,
+    "complete": bool
+}
