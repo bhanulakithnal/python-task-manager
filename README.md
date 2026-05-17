@@ -25,3 +25,18 @@ Each task is stored as a Python dictionary:
     "title": str,
     "complete": bool
 }
+
+
+## Program Flow
+
+- User runs program → main() executes
+
+- Loads existing tasks from tasks.json
+
+- Shows menu → user selects option
+
+- Performs action (add/view/remove/exit)
+
+- Auto-saves after modifications
+
+- Loops until user chooses Exit

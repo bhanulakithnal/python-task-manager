@@ -7,6 +7,15 @@ FILE_NAME = "tasks.json"
 
 # --- FILE HANDLING ---
 
+"""
+load_tasks() -> list
+Loads saved tasks from the JSON file on disk.
+Checks if the file exists; returns empty list if not
+Attempts to read and parse JSON data
+Handles corrupted files with error message and returns empty list
+Returns: List of task dictionaries
+"""
+
 def load_tasks() -> list:
     """Load tasks from JSON file if it exists."""
     if not os.path.exists(FILE_NAME):
@@ -19,6 +28,16 @@ def load_tasks() -> list:
         print("⚠️ Corrupted file detected. Starting fresh.")
         return []
 
+"""
+save_tasks(tasks: list)
+Saves the current task list to the JSON file.
+
+Opens file in write mode
+
+Saves tasks with 4-space indentation for readability
+
+Called automatically after any task modification
+"""
 
 def save_tasks(tasks: list):
     """Save tasks to JSON file."""
@@ -27,6 +46,19 @@ def save_tasks(tasks: list):
 
 
 # --- INPUT VALIDATION HELPERS ---
+
+"""
+get_valid_int(prompt: str, min_val: int, max_val: int) -> int
+Validates integer input within a range.
+
+Continuously prompts until valid input received
+
+Handles non-integer inputs (ValueError)
+
+Validates number is between min_val and max_val (inclusive)
+
+Returns: Validated integer
+"""
 
 def get_valid_int(prompt: str, min_val: int, max_val: int) -> int:
     """Prompts for an integer within a specific inclusive range."""
@@ -40,6 +72,17 @@ def get_valid_int(prompt: str, min_val: int, max_val: int) -> int:
             print(f"❌ Invalid input. Please enter a valid number.")
 
 
+"""
+get_valid_confirm(prompt: str) -> bool
+Handles yes/no questions with validation.
+
+Converts input to lowercase for case-insensitive comparison
+
+Only accepts 'yes' or 'no'
+
+Returns: True for 'yes', False for 'no'
+"""
+
 def get_valid_confirm(prompt: str) -> bool:
     """Prompts for a YES or NO question, returning a boolean."""
     while True:
@@ -48,6 +91,16 @@ def get_valid_confirm(prompt: str) -> bool:
             return response == 'yes'
         print("❌ Invalid input. Please type 'YES' or 'NO'.")
 
+"""
+get_non_empty_string(prompt: str) -> str
+Ensures user input isn't empty or just whitespace.
+
+Strips whitespace from input
+
+Rejects empty strings
+
+Returns: Non-empty string
+"""
 
 def get_non_empty_string(prompt: str) -> str:
     """Ensures the user doesn't provide an empty string or whitespace."""
@@ -59,6 +112,19 @@ def get_non_empty_string(prompt: str) -> str:
 
 
 # --- CORE APPLICATION FUNCTIONS ---
+
+"""
+add_task(tasks_list: list)
+Creates and adds a new task to the list.
+
+Gets validated task name (non-empty)
+
+Gets completion status (yes/no)
+
+Appends task dictionary: {"title": str, "complete": bool}
+
+Prints success confirmation message
+"""
 
 def add_task(tasks_list: list):
     """Add a new task to the list with full validation."""
@@ -72,6 +138,21 @@ def add_task(tasks_list: list):
     print(f"✅ Your task '{task_name}' was successfully added.")
 
 
+"""
+view_tasks(tasks_list: list)
+Displays all tasks in a formatted list.
+
+Creates centered header ("= Your tasks =")
+
+Shows empty message if no tasks exist
+
+Numbers tasks starting from 1
+
+Shows status emojis: ✅ Done or ❌ Not Done
+
+Prints separator line
+"""
+
 def view_tasks(tasks_list: list):
     """Display all current tasks."""
     print(f"\n{' Your tasks ':=^30}")
@@ -84,6 +165,21 @@ def view_tasks(tasks_list: list):
             print(f"{index}. {task['title']} [{status}]")
     print("=" * 30)
 
+
+"""
+remove_task(tasks_list: list)
+Removes a task by its displayed number.
+
+Checks if task list is empty first
+
+Calls view_tasks() to show current tasks
+
+Gets validated task number (1 to list length)
+
+Removes task using pop() (adjusts for 0-based index)
+
+Confirms removal with task name
+"""
 
 def remove_task(tasks_list: list):
     """Remove a task from the list."""
@@ -112,6 +208,23 @@ MENU = {
 }
 
 
+"""
+run_menu_cycle(tasks_list: list) -> bool
+Main menu handler - displays options and executes user choice.
+
+Displays menu with numbered options
+
+Gets validated choice (1-4)
+
+Handles Exit option (choice 4) - returns True
+
+Executes selected function from MENU dictionary
+
+Auto-saves after any modification
+
+Returns: True if exiting, False to continue
+"""
+
 def run_menu_cycle(tasks_list: list) -> bool:
     """Displays menu, handles input, and executes choice in a single operational layer.
     
@@ -135,6 +248,19 @@ def run_menu_cycle(tasks_list: list) -> bool:
     save_tasks(tasks_list) 
     return False
 
+
+"""
+main()
+Application entry point and main loop.
+
+Prints welcome message
+
+Loads existing tasks from file
+
+Continuously runs menu cycles until user exits
+
+Uses while not run_menu_cycle(tasks) to keep looping
+"""
 
 def main():
     """Main application entry point."""
