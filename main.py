@@ -1,3 +1,31 @@
+import os
+import json
+
+# --- FILE CONFIG ---
+
+FILE_NAME = "tasks.json"
+
+# --- FILE HANDLING ---
+
+def load_tasks() -> list:
+    """Load tasks from JSON file if it exists."""
+    if not os.path.exists(FILE_NAME):
+        return []
+
+    try:
+        with open(FILE_NAME, "r") as file:
+            return json.load(file)
+    except (json.JSONDecodeError, FileNotFoundError):
+        print("⚠️ Corrupted file detected. Starting fresh.")
+        return []
+
+
+def save_tasks(tasks: list):
+    """Save tasks to JSON file."""
+    with open(FILE_NAME, "w") as file:
+        json.dump(tasks, file, indent=4)
+
+
 # --- INPUT VALIDATION HELPERS ---
 
 def get_valid_int(prompt: str, min_val: int, max_val: int) -> int:
@@ -11,6 +39,7 @@ def get_valid_int(prompt: str, min_val: int, max_val: int) -> int:
         except ValueError:
             print(f"❌ Invalid input. Please enter a valid number.")
 
+
 def get_valid_confirm(prompt: str) -> bool:
     """Prompts for a YES or NO question, returning a boolean."""
     while True:
@@ -18,6 +47,7 @@ def get_valid_confirm(prompt: str) -> bool:
         if response in ['yes', 'no']:
             return response == 'yes'
         print("❌ Invalid input. Please type 'YES' or 'NO'.")
+
 
 def get_non_empty_string(prompt: str) -> str:
     """Ensures the user doesn't provide an empty string or whitespace."""
@@ -39,8 +69,8 @@ def add_task(tasks_list: list):
         "title": task_name, 
         "complete": is_complete
     })
-
     print(f"✅ Your task '{task_name}' was successfully added.")
+
 
 def view_tasks(tasks_list: list):
     """Display all current tasks."""
@@ -53,6 +83,7 @@ def view_tasks(tasks_list: list):
             status = "✅ Done" if task["complete"] else "❌ Not Done"
             print(f"{index}. {task['title']} [{status}]")
     print("=" * 30)
+
 
 def remove_task(tasks_list: list):
     """Remove a task from the list."""
@@ -80,19 +111,12 @@ MENU = {
     4: ("Exit", None)
 }
 
+
 def run_menu_cycle(tasks_list: list) -> bool:
     """Displays menu, handles input, and executes choice in a single operational layer.
     
     Returns:
         bool: True if exiting, False to continue.
-    """
-
-    """
-    (option_name, _) opens up the value tuple and splits it into two pieces:
-
-    option_name grabs the first item in the tuple (e.g., "Add Task").
-
-    _ (The Underscore) is a standard Python convention that means: "There is a piece of data here, but I don't care about it and I'm going to ignore it." In this case, we are ignoring the actual function object (add_task) because we don't need it just to print the menu text. 
     """
     print("\nWhat would you like to do:")
     for num, (option_name, _) in MENU.items():
@@ -104,19 +128,23 @@ def run_menu_cycle(tasks_list: list) -> bool:
         print("\nGoodbye! Have a productive day! 👋")
         return True
         
-    # Since choice is strictly validated between 1 and 3 here, we execute safely without extra checks
+    # Execute the chosen function
     MENU[user_choice][1](tasks_list)
+    
+    # Save automatically after tasks are added or removed
+    save_tasks(tasks_list) 
     return False
 
 
 def main():
     """Main application entry point."""
     print("Welcome User!")
-    tasks = []
 
-    # Clean, infinite cycle until run_menu_cycle returns True
+    tasks = load_tasks()   # Load any existing data from tasks.json
+
     while not run_menu_cycle(tasks):
         pass
+
 
 if __name__ == "__main__":
     main()
