@@ -15,3 +15,10 @@ A terminal-based task manager built with Python.
 
 ## Current Development Stage
 Stage 1 — Menu System Foundation
+
+## Learning Goals
+This project is being built step-by-step to practice:
+- Python fundamentals
+- Software structure
+- Git and GitHub workflow
+- Clean coding practices
